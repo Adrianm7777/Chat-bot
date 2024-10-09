@@ -21,5 +21,4 @@ from api.views import ChatBotResponseListCreate, ChatbotAnswerView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/chatbot',ChatBotResponseListCreate.as_view(), name='chatbot-list-create'),
-    path('chatbot/ask', ChatbotAnswerView.as_view(),  name='chatbot-answer')
-]
+    path('api/chatbot/ask/', ChatbotAnswerView.as_view(), name='chatbot-answer'),]
