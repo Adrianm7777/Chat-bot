@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import ChatBotResponseListCreate
+from api.views import ChatBotResponseListCreate, ChatbotAnswerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/chatbot',ChatBotResponseListCreate.as_view(), name='chatbot-list-create')
+    path('api/chatbot',ChatBotResponseListCreate.as_view(), name='chatbot-list-create'),
+    path('chatbot/ask', ChatbotAnswerView.as_view(),  name='chatbot-answer')
 ]
