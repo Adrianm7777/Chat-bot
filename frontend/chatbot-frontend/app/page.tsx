@@ -12,7 +12,7 @@ export default function ChatbotPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000//api/chatbot/ask", {
+      const res = await fetch("http://127.0.0.1:8000//api/chatbot/ask/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
