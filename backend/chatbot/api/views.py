@@ -6,34 +6,24 @@ import spacy
 from rest_framework.response import Response
 from .models import ChatBotResponse
 from rest_framework.views import APIView
+from transformers import pipeline
+from rest_framework.decorators import api_view
 
 class ChatBotResponseListCreate(generics.ListCreateAPIView):
     queryset = ChatBotResponse.objects.all()
     serializer_class = ChatBotResponseSerialzer
 
-nlp = spacy.load('en_core_web_sm')
+gpt2 = pipeline('text-generation', model='gpt2')
 
-class ChatbotAnswerView(APIView):
-    def post(self,request):
-        user_question = request.data.get('question')
+@api_view(['POST'])
+def chatbot_ask(request):
+    question = request.data.get('question', '')
 
-        if not user_question:
-            return Response({'error':'No question provided.'},status=400)
-        
-        user_question_doc = nlp(user_question)
+    if question:
+        result = gpt2(question, max_length=50, num_return_sequences=1, truncation=True)
+        answer = result[0]['generated_text']
 
-        best_match = None
-        best_similarity = 0
+    else:
+        answer = "Please ask a question."
 
-        for response in ChatBotResponse.objects.all():
-            response_doc = nlp(response.question)
-            simlarity = user_question_doc.similarity(response_doc)
-
-            if simlarity > best_similarity:
-                best_similarity = simlarity
-                best_match = response
-
-            if best_match:
-                return Response({"question": best_match.question, "response": best_match.response})
-            
-            return Response({"message": "Sorry, I don't have an answer for that."})
+    return Response({'response':answer})
